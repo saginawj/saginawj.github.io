@@ -505,3 +505,38 @@ section {
     width: 80%;
   }
 }
+
+
+/*--------------------------------------------------------------
+# Buy Me a Coffee
+--------------------------------------------------------------*/
+#bmc {
+  padding: 40px 0;
+  text-align: center; /* Center the text and elements */
+  background-color: #f9f9f9; /* Light background color for the section */
+}
+
+#bmc .section-title h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+#bmc .bmc-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Optional: Add some padding around the button */
+#bmc .bmc-button-container script {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #ffdd00;
+  transition: background-color 0.3s ease;
+}
+
+#bmc .bmc-button-container script:hover {
+  background-color: #e6c200; /* Darken on hover */
+}
