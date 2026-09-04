@@ -1,264 +1,142 @@
+import { projects, photos, officialCountryCodes, countryNotes, travelData } from './content.js';
 
-(function() {
-  "use strict";
+const escapeHTML = (value = '') => value.replace(/[&<>'\"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
+const navToggle = document.querySelector('.nav-toggle');
+const navLinks = [...document.querySelectorAll('.expedition-index a')];
+const sections = [...document.querySelectorAll('main > section[id]')];
 
-  /**
-   * Easy selector helper function
-   */
-  const select = (el, all = false) => {
-    el = el.trim()
-    if (all) {
-      return [...document.querySelectorAll(el)]
-    } else {
-      return document.querySelector(el)
-    }
-  }
+navToggle?.addEventListener('click', () => {
+  const open = document.body.classList.toggle('nav-open');
+  navToggle.setAttribute('aria-expanded', String(open));
+});
+navLinks.forEach((link) => link.addEventListener('click', () => {
+  document.body.classList.remove('nav-open');
+  navToggle?.setAttribute('aria-expanded', 'false');
+}));
 
-  /**
-   * Easy event listener function
-   */
-  const on = (type, el, listener, all = false) => {
-    let selectEl = select(el, all)
-    if (selectEl) {
-      if (all) {
-        selectEl.forEach(e => e.addEventListener(type, listener))
-      } else {
-        selectEl.addEventListener(type, listener)
-      }
-    }
-  }
+const sectionObserver = new IntersectionObserver((entries) => {
+  const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  if (!visible) return;
+  navLinks.forEach((link) => link.classList.toggle('active', link.dataset.section === visible.target.id));
+}, { rootMargin: '-25% 0px -60%', threshold: [0, .25, .6] });
+sections.forEach((section) => sectionObserver.observe(section));
 
-  /**
-   * Easy on scroll event listener 
-   */
-  const onscroll = (el, listener) => {
-    el.addEventListener('scroll', listener)
-  }
+const updateScrollProgress = () => {
+  const available = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = available > 0 ? Math.min(100, (window.scrollY / available) * 100) : 0;
+  document.documentElement.style.setProperty('--scroll-progress', `${progress}%`);
+};
+window.addEventListener('scroll', updateScrollProgress, { passive: true });
+updateScrollProgress();
 
-  /**
-   * Navbar links active state on scroll
-   */
-  let navbarlinks = select('#navbar .scrollto', true)
-  const navbarlinksActive = () => {
-    let position = window.scrollY + 200
-    navbarlinks.forEach(navbarlink => {
-      if (!navbarlink.hash) return
-      let section = select(navbarlink.hash)
-      if (!section) return
-      if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
-        navbarlink.classList.add('active')
-      } else {
-        navbarlink.classList.remove('active')
-      }
-    })
-  }
-  window.addEventListener('load', navbarlinksActive)
-  onscroll(document, navbarlinksActive)
+const projectGrid = document.querySelector('#project-grid');
+projects.filter((project) => !project.draft).forEach((project, index) => {
+  const article = document.createElement('article');
+  article.className = 'project-card reveal';
+  const metadata = [project.status, project.year].filter(Boolean).join(' / ');
+  const tags = project.technologies.length
+    ? `<ul class="tag-list" aria-label="Technologies">${project.technologies.map((technology) => `<li>${escapeHTML(technology)}</li>`).join('')}</ul>`
+    : '';
+  const projectAction = project.primaryLink
+    ? `<a class="project-link mono" href="${project.primaryLink}" target="_blank" rel="noreferrer">${escapeHTML(project.linkLabel || 'VIEW PROJECT')} <span aria-hidden="true">↗</span></a>`
+    : '';
+  article.innerHTML = `
+    <div class="project-top mono"><span>BUILD ${String(index + 1).padStart(2, '0')}</span><span>${escapeHTML(metadata)}</span></div>
+    <div class="project-mark" aria-hidden="true"><span>${escapeHTML(project.mark)}</span><i></i><i></i><i></i></div>
+    <h3>${escapeHTML(project.title)}</h3>
+    <p>${escapeHTML(project.summary)}</p>
+    ${tags}
+    ${projectAction}`;
+  projectGrid.append(article);
+});
 
-  /**
-   * Scrolls to an element with header offset
-   */
-  const scrollto = (el) => {
-    let elementPos = select(el).offsetTop
-    window.scrollTo({
-      top: elementPos,
-      behavior: 'smooth'
-    })
-  }
-
-  /**
-   * Back to top button
-   */
-  let backtotop = select('.back-to-top')
-  if (backtotop) {
-    const toggleBacktotop = () => {
-      if (window.scrollY > 100) {
-        backtotop.classList.add('active')
-      } else {
-        backtotop.classList.remove('active')
-      }
-    }
-    window.addEventListener('load', toggleBacktotop)
-    onscroll(document, toggleBacktotop)
-  }
-
-  /**
-   * Mobile nav toggle
-   */
-  on('click', '.mobile-nav-toggle', function(e) {
-    select('body').classList.toggle('mobile-nav-active')
-    this.classList.toggle('bi-list')
-    this.classList.toggle('bi-x')
-  })
-
-  /**
-   * Scrool with ofset on links with a class name .scrollto
-   */
-  on('click', '.scrollto', function(e) {
-    if (select(this.hash)) {
-      e.preventDefault()
-
-      let body = select('body')
-      if (body.classList.contains('mobile-nav-active')) {
-        body.classList.remove('mobile-nav-active')
-        let navbarToggle = select('.mobile-nav-toggle')
-        navbarToggle.classList.toggle('bi-list')
-        navbarToggle.classList.toggle('bi-x')
-      }
-      scrollto(this.hash)
-    }
-  }, true)
-
-  /**
-   * Scroll with ofset on page load with hash links in the url
-   */
-  window.addEventListener('load', () => {
-    if (window.location.hash) {
-      if (select(window.location.hash)) {
-        scrollto(window.location.hash)
-      }
-    }
+const lightbox = document.querySelector('#lightbox');
+const lightboxImage = lightbox?.querySelector('img');
+const lightboxCaption = lightbox?.querySelector('figcaption');
+const photoGrid = document.querySelector('#photo-grid');
+photos.filter((photo) => !photo.draft && photo.src).forEach((photo, index) => {
+  const figure = document.createElement('figure');
+  figure.className = `photo-item photo-${photo.orientation} reveal`;
+  figure.innerHTML = `
+    <button type="button" aria-label="Open photograph from ${escapeHTML(photo.country)}">
+      <img src="${photo.src}" alt="${escapeHTML(photo.alt)}" loading="lazy">
+      <span class="photo-number mono">FRAME ${String(index + 1).padStart(3, '0')}</span>
+    </button>
+    <figcaption><strong>${escapeHTML(photo.country)}</strong><span>${escapeHTML(photo.date)} / ${escapeHTML(photo.caption)}</span></figcaption>`;
+  figure.querySelector('button').addEventListener('click', () => {
+    lightboxImage.src = photo.src; lightboxImage.alt = photo.alt;
+    lightboxCaption.textContent = `${photo.country} · ${photo.date} — ${photo.caption}`;
+    lightbox.showModal();
   });
+  photoGrid.append(figure);
+});
+lightbox?.querySelector('.lightbox-close')?.addEventListener('click', () => lightbox.close());
+lightbox?.addEventListener('click', (event) => { if (event.target === lightbox) lightbox.close(); });
 
-  /**
-   * Preloader
-   */
-  let preloader = select('#preloader');
-  if (preloader) {
-    window.addEventListener('load', () => {
-      preloader.remove()
+const countryDisplayNames = new Intl.DisplayNames(['en'], { type: 'region' });
+const countryByCode = new Map(travelData.map((country) => [country.code, country]));
+const visitedCount = travelData.filter((country) => country.visited).length;
+document.querySelectorAll('[data-country-count]').forEach((element) => { element.textContent = visitedCount; });
+
+const mapContainer = document.querySelector('#world-map');
+const mapStatus = document.querySelector('#map-status');
+const countryCard = document.querySelector('#country-card');
+const countryName = (path, code) => path?.dataset.countryName || path?.getAttribute('aria-label') || countryDisplayNames.of(code.toUpperCase()) || code.toUpperCase();
+const showCountry = (path, code) => {
+  const record = countryByCode.get(code) || countryNotes[code];
+  const name = countryName(path, code);
+  const status = record?.visited ? 'Visited' : record ? 'Not yet' : 'Map context';
+  mapStatus.textContent = `${name.toUpperCase()} / ${status.toUpperCase()}`;
+  countryCard.hidden = false;
+  countryCard.innerHTML = `<span class="mono">${escapeHTML(code.toUpperCase())} / ${escapeHTML(status)}</span><strong>${escapeHTML(name)}</strong><p>${escapeHTML(record?.note || (record?.provisional ? 'Travel status follows the provisional 175-country record.' : 'Included for geographic context.'))}</p>${record?.year ? `<small class="mono">FIELD NOTE / ${escapeHTML(record.year)}</small>` : ''}`;
+};
+
+const initializeMap = async () => {
+  try {
+    const response = await fetch('assets/data/world.svg');
+    if (!response.ok) throw new Error('Map unavailable');
+    const svgText = await response.text();
+    const parsed = new DOMParser().parseFromString(svgText, 'image/svg+xml');
+    const svg = parsed.documentElement;
+    svg.classList.add('atlas-map'); svg.setAttribute('role', 'group'); svg.setAttribute('aria-label', 'World map with visited countries highlighted');
+    mapContainer.replaceChildren(document.importNode(svg, true));
+    mapContainer.querySelectorAll('path[id]').forEach((path) => {
+      const code = path.id.toLowerCase();
+      const record = countryByCode.get(code) || countryNotes[code];
+      path.classList.add(record?.visited ? 'visited' : record ? 'unvisited' : 'context');
+      if (!record) return;
+      const name = countryName(path, code);
+      path.dataset.countryName = name;
+      path.setAttribute('tabindex', '0'); path.setAttribute('role', 'button');
+      path.setAttribute('aria-label', `${name}: ${record.visited ? 'visited' : 'not yet visited'}`);
+      path.addEventListener('pointerenter', () => showCountry(path, code));
+      path.addEventListener('focus', () => showCountry(path, code));
+      path.addEventListener('click', () => showCountry(path, code));
+      path.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showCountry(path, code); } });
     });
+  } catch (error) {
+    mapContainer.classList.add('map-failed');
+    mapContainer.textContent = 'The interactive map could not be loaded. The country index remains available below.';
   }
+};
 
-  /**
-   * Hero type effect
-   */
-  const typed = select('.typed')
-  if (typed) {
-    let typed_strings = typed.getAttribute('data-typed-items')
-    typed_strings = typed_strings.split(',')
-    new Typed('.typed', {
-      strings: typed_strings,
-      loop: true,
-      typeSpeed: 100,
-      backSpeed: 50,
-      backDelay: 2000
-    });
-  }
+const countryList = document.querySelector('#country-list');
+const list = document.createElement('ul');
+travelData.map((record) => ({ ...record, name: countryDisplayNames.of(record.code.toUpperCase()) || record.code.toUpperCase() })).sort((a,b) => a.name.localeCompare(b.name)).forEach((country) => {
+  const item = document.createElement('li');
+  item.innerHTML = `<span>${escapeHTML(country.name)}</span><b class="mono ${country.visited ? 'is-visited' : ''}">${country.visited ? 'VISITED' : 'NOT YET'}</b>`;
+  list.append(item);
+});
+countryList.append(list);
+initializeMap();
 
-  /**
-   * Skills animation
-   */
-  let skilsContent = select('.skills-content');
-  if (skilsContent) {
-    new Waypoint({
-      element: skilsContent,
-      offset: '80%',
-      handler: function(direction) {
-        let progress = select('.progress .progress-bar', true);
-        progress.forEach((el) => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%'
-        });
-      }
-    })
-  }
+const revealObserver = new IntersectionObserver((entries, observer) => entries.forEach((entry) => {
+  if (!entry.isIntersecting) return;
+  entry.target.classList.add('is-visible'); observer.unobserve(entry.target);
+}), { threshold: .12 });
+document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
 
-  /**
-   * Porfolio isotope and filter
-   */
-  window.addEventListener('load', () => {
-    let portfolioContainer = select('.portfolio-container');
-    if (portfolioContainer) {
-      let portfolioIsotope = new Isotope(portfolioContainer, {
-        itemSelector: '.portfolio-item'
-      });
-
-      let portfolioFilters = select('#portfolio-flters li', true);
-
-      on('click', '#portfolio-flters li', function(e) {
-        e.preventDefault();
-        portfolioFilters.forEach(function(el) {
-          el.classList.remove('filter-active');
-        });
-        this.classList.add('filter-active');
-
-        portfolioIsotope.arrange({
-          filter: this.getAttribute('data-filter')
-        });
-        portfolioIsotope.on('arrangeComplete', function() {
-          AOS.refresh()
-        });
-      }, true);
-    }
-
-  });
-
-  /**
-   * Initiate portfolio lightbox 
-   */
-  const portfolioLightbox = GLightbox({
-    selector: '.portfolio-lightbox'
-  });
-
-  /**
-   * Initiate portfolio details lightbox 
-   */
-  const portfolioDetailsLightbox = GLightbox({
-    selector: '.portfolio-details-lightbox',
-    width: '90%',
-    height: '90vh'
-  });
-
-  /**
-   * Portfolio details slider
-   */
-  new Swiper('.portfolio-details-slider', {
-    speed: 400,
-    loop: true,
-    autoplay: {
-      delay: 5000,
-      disableOnInteraction: false
-    },
-    pagination: {
-      el: '.swiper-pagination',
-      type: 'bullets',
-      clickable: true
-    }
-  });
-
-  /**
-   * Testimonials slider
-   */
-  new Swiper('.testimonials-slider', {
-    speed: 600,
-    loop: true,
-    autoplay: {
-      delay: 5000,
-      disableOnInteraction: false
-    },
-    slidesPerView: 'auto',
-    pagination: {
-      el: '.swiper-pagination',
-      type: 'bullets',
-      clickable: true
-    }
-  });
-
-  /**
-   * Animation on scroll
-   */
-  window.addEventListener('load', () => {
-    AOS.init({
-      duration: 1000,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false
-    })
-  });
-
-  /**
-   * Initiate Pure Counter 
-   */
-  new PureCounter();
-
-})()
+document.querySelector('#updated-year').textContent = new Date().getFullYear();
+const githubChart = document.querySelector('#github-chart');
+githubChart?.addEventListener('error', () => githubChart.closest('.github-chart-link')?.classList.add('failed'));
+if (officialCountryCodes.length !== 197 || visitedCount !== 175) console.warn('Travel data invariant failed', { total: officialCountryCodes.length, visited: visitedCount });
