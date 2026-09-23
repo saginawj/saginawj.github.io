@@ -5,27 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Good Luck Finding Me — Jon Saginaw's map of a life in progress: places, ideas, personal systems, and things built along the way.">
   <meta name="theme-color" content="#111310">
+  <meta name="application-name" content="Good Luck Finding Me">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="GLFM">
   <title>Good Luck Finding Me — Jon Saginaw</title>
-  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20260911">
+  <link rel="stylesheet" href="assets/css/style.css?v=20260923b">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header" aria-label="Primary navigation">
-    <a class="site-mark" href="#top" aria-label="Good Luck Finding Me, back to top"><span>GLF</span><small>JON SAGINAW</small></a>
+    <a class="site-mark" href="#top" aria-label="Good Luck Finding Me, back to top"><img src="assets/img/goodluckfindingme-logo.png" alt=""></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="sr-only">Open navigation</span><span></span><span></span></button>
     <nav id="site-nav" class="site-nav">
-      <a href="#map" data-section="map">Life</a><a href="#places" data-section="places">Places</a><a href="#workbench" data-section="workbench">Workbench</a><a href="#work" data-section="work">Work</a><a href="#contact" data-section="contact">Contact</a>
+      <a href="#map" data-section="map">Life</a><a href="#places" data-section="places">Travel</a><a href="#workbench" data-section="workbench">Workbench</a><a href="#work" data-section="work">Work</a><a href="#contact" data-section="contact">Contact</a>
     </nav>
   </header>
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
       <img class="hero-photo" src="assets/img/greenland-hero-2.jpg" alt="Jon overlooking icebergs and a glacier in Greenland">
       <div class="hero-wash"></div>
-      <div class="hero-copy"><p class="eyebrow mono">GOOD LUCK FINDING ME</p><h1 id="hero-title">A map of a<br>life in progress.</h1><p class="hero-intro">Places I’ve been. Things I’m building. What I’m keeping track of along the way.</p></div>
+      <div class="hero-copy"><h1 id="hero-title">Good Luck<br>Finding Me.</h1><p class="hero-intro">Places I've been. Things I'm building.</p></div>
       <a class="scroll-cue mono" href="#map">START HERE <span aria-hidden="true">↓</span></a>
     </section>
     <section class="map-chapter" id="map" aria-labelledby="life-title">
@@ -34,9 +41,9 @@
     </section>
     <section class="places-chapter" id="places" aria-labelledby="places-title">
       <div class="section-kicker mono">PLACES / PRIVATE</div>
-      <div class="places-heading"><div><p class="eyebrow mono">TWIGA DUNIA</p><h2 id="places-title"><span data-country-count>175</span> down.<br>12 to wander.</h2></div><div class="places-copy"><p>Travel is the longest-running thread in the map. This is the overview; Twiga Dunia is becoming the deeper record of trips, photographs, and stories.</p><a class="text-link mono" href="https://travel.goodluckfinding.me">ENTER TWIGA DUNIA <span aria-hidden="true">↗</span></a></div></div>
+      <div class="places-heading"><div><p class="eyebrow mono">TWIGA DUNIA</p><h2 id="places-title"><span data-country-count>188</span> down.<br><span data-country-remaining>9</span> to wander.</h2></div><div class="places-copy"><p>Travel is the longest-running thread in the map. This is the overview; Twiga Dunia is becoming the deeper record of trips, photographs, and stories.</p><a class="text-link mono" href="https://travel.goodluckfinding.me">ENTER TWIGA DUNIA <span aria-hidden="true">↗</span></a></div></div>
       <div class="map-frame" id="map-frame"><div class="map-toolbar mono"><span>VISITED</span><i></i><span>NOT YET</span><i></i><span id="map-status" role="status">SELECT A COUNTRY</span></div><div id="world-map" class="world-map" aria-label="Interactive map of countries Jon has visited"></div><noscript><figure class="static-map"><img src="assets/img/been-map.jpg" alt="Map highlighting countries Jon has visited"></figure></noscript><aside class="country-card" id="country-card" aria-live="polite" hidden></aside></div>
-      <details class="country-index"><summary class="mono">ACCESSIBLE COUNTRY INDEX <span>+</span></summary><p class="data-note">The 175-country total is current; individual country statuses are provisional until the original travel log is reconciled.</p><div id="country-list"></div></details>
+      <details class="country-index"><summary class="mono">ACCESSIBLE COUNTRY INDEX <span>+</span></summary><p class="data-note">The 188-country total is current; individual country statuses are provisional until the original travel log is reconciled.</p><div id="country-list"></div></details>
     </section>
     <section class="workbench-chapter" id="workbench" aria-labelledby="workbench-title">
       <div class="section-kicker mono">WORKBENCH</div>
@@ -45,12 +52,19 @@
     </section>
     <section class="about-chapter" id="about" aria-labelledby="about-title">
       <div class="section-kicker mono">A LITTLE CONTEXT</div>
-      <div class="about-grid"><h2 id="about-title">Curiosity is still the operating system.</h2><div class="about-copy"><p class="lead">I’m Jon. I’ve visited 175 countries, spent more than twenty years building technology, and still take things apart to see how they work.</p><p>My work has moved through cloud, media, blockchain, and AI. The through-line is less the technology than the impulse to make complicated things useful.</p><p class="cat-note"><span aria-hidden="true">↳</span> My third, unreciprocated passion is cats.</p></div></div>
+      <div class="about-grid"><h2 id="about-title">Curiosity is still the operating system.</h2><div class="about-copy"><p class="lead">I’m Jon. I’ve visited 188 countries, spent more than twenty years building technology, and still take things apart to see how they work.</p><p>My work has moved through cloud, media, blockchain, and AI. The through-line is less the technology than the impulse to make complicated things useful.</p><p class="cat-note"><span aria-hidden="true">↳</span> My third, unreciprocated passion is cats.</p></div></div>
     </section>
     <section class="resume-chapter" id="work" aria-labelledby="work-title"><div class="section-kicker mono">WORK / 2004—NOW</div><div class="resume-header"><h2 id="work-title">Twenty years at the intersection of ideas and execution.</h2><p>Strategy, architecture, and hands-on building for organizations navigating the next technical shift.</p></div><div class="resume-layout"><aside class="resume-aside"><div><span class="mono">CURRENT FOCUS</span><p>Artificial intelligence · LLM applications · agentic systems · product architecture</p></div><div><span class="mono">EDUCATION</span><p>MS, Information Systems Development<br>George Washington University</p><p>BA, Liberal Arts<br>University of Michigan</p></div><div><span class="mono">PATENTS / 03</span><p>Cloud-connected automated testing</p><p>Video analytics device</p><p>Audience data collection</p></div></aside><ol class="timeline" aria-label="Professional experience"><li><time class="mono">2020—NOW</time><div><h3>Chief Technology Officer</h3><p class="company">Datakafe</p><p>Building AI and LLM products end-to-end, from product strategy and architecture through deployment and operation.</p></div></li><li><time class="mono">2021—2023</time><div><h3>Co-Founder / Strategic Advisor</h3><p class="company">Minted Technologies · WADA</p><p>Designed web2/web3 identity systems and advised on distributed-ledger products, go-to-market strategy, and architecture.</p></div></li><li><time class="mono">2004—2020</time><div><h3>Managing Director</h3><p class="company">Accenture</p><p>Led large technical organizations and an eight-figure media portfolio; engineered digital transformations and three patented platforms.</p></div></li></ol></div></section>
     <section class="contact-chapter" id="contact" aria-labelledby="contact-title"><div><p class="section-kicker mono">TRANSMITTING FROM NEW YORK</p><h2 id="contact-title">You found me.</h2></div><div class="contact-links"><a href="https://github.com/saginawj"><span>GitHub</span><b aria-hidden="true">↗</b></a><a href="https://www.linkedin.com/in/jonsaginaw/"><span>LinkedIn</span><b aria-hidden="true">↗</b></a><a href="mailto:saginawj@gmail.com"><span>Email</span><b aria-hidden="true">↗</b></a></div><div class="github-pulse"><div class="mono"><span>GITHUB PULSE</span><span>PAST 12 MONTHS</span></div><a class="github-chart-link" href="https://github.com/saginawj" aria-label="View Jon Saginaw on GitHub"><img id="github-chart" src="https://ghchart.rshah.org/39d353/saginawj" alt="Jon Saginaw’s GitHub contribution chart for the past year" loading="lazy"><span class="chart-fallback">Contribution chart unavailable — open GitHub profile ↗</span></a></div><footer><span class="mono">GOOD LUCK FINDING ME</span><span>Jon Saginaw · <time id="updated-year"></time></span></footer></section>
   </main>
-  <script src="assets/js/content.js?v=20260911b"></script>
-  <script src="assets/js/main.js?v=20260911b"></script>
+  <script src="assets/js/content.js?v=20260923"></script>
+  <script src="assets/js/main.js?v=20260923"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch((error) => console.warn('Offline mode unavailable', error));
+      });
+    }
+  </script>
 </body>
 </html>

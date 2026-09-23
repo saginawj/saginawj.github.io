@@ -8,7 +8,12 @@ const regionList = document.querySelector('#region-list');
 regions.forEach((region) => {
   const article = document.createElement('article');
   article.className = `region-card region-${region.id} reveal`;
-  const app = region.app ? `<a class="region-app" href="${region.app.url}" aria-label="Open ${escapeHTML(region.app.name)}"><span class="app-icon">${iconMarkup(region.app)}</span><span class="app-copy"><small class="mono">PRIVATE TOOL</small><strong>${escapeHTML(region.app.name)}</strong><span>${escapeHTML(region.app.description)}</span></span><b aria-hidden="true">↗</b></a>` : `<div class="future-note"><span class="mono">FUTURE</span><p>No system yet. Just a place in the structure when it is useful.</p></div>`;
+  const appContents = region.app ? `<span class="app-icon">${iconMarkup(region.app)}</span><span class="app-copy"><small class="mono">PRIVATE TOOL</small><strong>${escapeHTML(region.app.name)}</strong><span>${escapeHTML(region.app.description)}</span></span>` : '';
+  const app = region.app
+    ? region.app.url
+      ? `<a class="region-app" href="${region.app.url}" aria-label="Open ${escapeHTML(region.app.name)}">${appContents}<b aria-hidden="true">↗</b></a>`
+      : `<div class="region-app">${appContents}</div>`
+    : `<div class="future-note"><span class="mono">FUTURE</span><p>No system yet. Just a place in the structure when it is useful.</p></div>`;
   article.innerHTML = `<div class="region-card-top"><span class="mono">${region.number} / REGION</span><span class="status status-${region.visibility} mono">${statusLabel(region.visibility)}</span></div><h3>${escapeHTML(region.name)}</h3><p class="region-description">${escapeHTML(region.description)}</p>${app}`;
   regionList.append(article);
 });
@@ -32,13 +37,15 @@ document.querySelectorAll('main > section[id]:not(#top)').forEach((section) => s
 const countryDisplayNames = new Intl.DisplayNames(['en'], { type: 'region' });
 const countryByCode = new Map(travelData.map((country) => [country.code, country]));
 // The published total is authoritative while individual map statuses remain provisional.
-const visitedCount = 175;
+const visitedCount = travelData.filter((country) => country.visited).length;
+const remainingCount = travelData.length - visitedCount;
 document.querySelectorAll('[data-country-count]').forEach((element) => { element.textContent = visitedCount; });
+document.querySelectorAll('[data-country-remaining]').forEach((element) => { element.textContent = remainingCount; });
 const mapContainer = document.querySelector('#world-map');
 const mapStatus = document.querySelector('#map-status');
 const countryCard = document.querySelector('#country-card');
 const countryName = (path, code) => path?.dataset.countryName || path?.getAttribute('aria-label') || countryDisplayNames.of(code.toUpperCase()) || code.toUpperCase();
-const showCountry = (path, code) => { const record = countryByCode.get(code) || countryNotes[code]; const name = countryName(path, code); const status = record?.visited ? 'Visited' : record ? 'Not yet' : 'Map context'; mapStatus.textContent = `${name.toUpperCase()} / ${status.toUpperCase()}`; countryCard.hidden = false; countryCard.innerHTML = `<span class="mono">${escapeHTML(code.toUpperCase())} / ${escapeHTML(status)}</span><strong>${escapeHTML(name)}</strong><p>${escapeHTML(record?.note || (record?.provisional ? 'Travel status follows the provisional 175-country record.' : 'Included for geographic context.'))}</p>${record?.year ? `<small class="mono">FIELD NOTE / ${escapeHTML(record.year)}</small>` : ''}`; };
+const showCountry = (path, code) => { const record = countryByCode.get(code) || countryNotes[code]; const name = countryName(path, code); const status = record?.visited ? 'Visited' : record ? 'Not yet' : 'Map context'; mapStatus.textContent = `${name.toUpperCase()} / ${status.toUpperCase()}`; countryCard.hidden = false; countryCard.innerHTML = `<span class="mono">${escapeHTML(code.toUpperCase())} / ${escapeHTML(status)}</span><strong>${escapeHTML(name)}</strong><p>${escapeHTML(record?.note || (record?.provisional ? `Travel status follows the provisional ${visitedCount}-country record.` : 'Included for geographic context.'))}</p>${record?.year ? `<small class="mono">FIELD NOTE / ${escapeHTML(record.year)}</small>` : ''}`; };
 const initializeMap = async () => {
   const showStaticMap = () => {
     mapContainer.classList.add('map-failed');
