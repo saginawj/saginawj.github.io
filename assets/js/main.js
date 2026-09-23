@@ -29,6 +29,7 @@ projects.forEach((project, index) => {
 
 const navToggle = document.querySelector('.nav-toggle');
 const navLinks = [...document.querySelectorAll('.site-nav a')];
+document.querySelector('.contact-links a[aria-label="Instagram"]')?.setAttribute('href', 'https://www.instagram.com/p111gp333n/');
 navToggle?.addEventListener('click', () => { const open = document.body.classList.toggle('nav-open'); navToggle.setAttribute('aria-expanded', String(open)); });
 navLinks.forEach((link) => link.addEventListener('click', () => { document.body.classList.remove('nav-open'); navToggle?.setAttribute('aria-expanded', 'false'); }));
 const sectionObserver = new IntersectionObserver((entries) => { const visible = entries.filter((entry) => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0]; if (!visible) return; navLinks.forEach((link) => link.classList.toggle('active', link.dataset.section === visible.target.id)); }, { rootMargin: '-25% 0px -60%', threshold: [0, .3] });

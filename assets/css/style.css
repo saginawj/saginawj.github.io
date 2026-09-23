@@ -41,3 +41,19 @@
 
 .map-chapter .life-intro{display:block;max-width:48rem;margin-bottom:2.75rem}
 .map-chapter .life-intro h2{max-width:none}
+
+.contact-links a{align-items:center;padding:1.4rem 0}
+.contact-links svg{width:2.75rem;height:2.75rem;fill:currentColor;transition:transform .22s ease}
+.contact-links a:hover svg{transform:translateY(-.18rem) scale(1.08)}
+.contact-chapter{align-items:center;padding-top:clamp(3.5rem,6vw,6rem);padding-bottom:clamp(3.5rem,6vw,6rem)}
+.contact-chapter .section-kicker{display:none}
+.contact-chapter h2{font-size:clamp(3.2rem,5.5vw,6rem)}
+.contact-links{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid rgba(17,19,16,.35)}
+.contact-links a{position:relative;justify-content:center;min-height:6.5rem;padding:1rem;border-right:1px solid rgba(17,19,16,.35);border-bottom:0}
+.contact-links a:last-child{border-right:0}
+.contact-links a>b{position:absolute;top:.8rem;right:.8rem;font-size:.8rem}
+.contact-links svg{width:3rem;height:3rem}
+@media(max-width:900px){.contact-chapter{align-items:start}.contact-links{width:100%}}
+@media(max-width:620px){.contact-chapter{padding-top:4rem;padding-bottom:4rem}.contact-links a{min-height:5.5rem}.contact-links svg{width:2.5rem;height:2.5rem}}
+.contact-chapter .github-pulse{color:#f0f6fc;background:#0d1117;border:1px solid rgba(240,246,252,.14)}
+.contact-chapter .github-chart-link img{filter:brightness(1.18) saturate(1.15) contrast(1.08)}
