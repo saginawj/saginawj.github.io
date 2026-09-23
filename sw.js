@@ -1,11 +1,11 @@
-const CACHE_NAME = 'glfm-v5';
+const CACHE_NAME = 'glfm-v7';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './assets/css/style.css?v=20260923b',
+  './assets/css/style.css?v=20260923d',
   './assets/js/content.js?v=20260923',
-  './assets/js/main.js?v=20260923',
+  './assets/js/main.js?v=20260923c',
   './assets/data/world.svg',
   './assets/img/favicon.png',
   './assets/img/goodluckfindingme-logo.png',

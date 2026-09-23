@@ -1,20 +1,20 @@
 const { regions, projects, officialCountryCodes, countryNotes, travelData } = window.siteContent;
 
 const escapeHTML = (value = '') => String(value).replace(/[&<>'\"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
-const statusLabel = (status) => status === 'private' ? 'PRIVATE <span aria-hidden="true">🔒</span>' : status.toUpperCase();
+const statusLabel = (status) => status === 'private' ? 'PRIVATE <span class="lock-icon" aria-hidden="true"></span>' : status.toUpperCase();
 const iconMarkup = (app) => app.icon ? `<img src="${app.icon}" alt="${escapeHTML(app.iconAlt)}">` : `<span aria-hidden="true">${escapeHTML(app.fallback)}</span>`;
 
 const regionList = document.querySelector('#region-list');
 regions.forEach((region) => {
   const article = document.createElement('article');
   article.className = `region-card region-${region.id} reveal`;
-  const appContents = region.app ? `<span class="app-icon">${iconMarkup(region.app)}</span><span class="app-copy"><small class="mono">PRIVATE TOOL</small><strong>${escapeHTML(region.app.name)}</strong><span>${escapeHTML(region.app.description)}</span></span>` : '';
+  const appContents = region.app ? `<span class="app-icon">${iconMarkup(region.app)}</span><span class="app-copy"><strong>${escapeHTML(region.app.name)}</strong><span>${escapeHTML(region.app.description)}</span></span>` : '';
   const app = region.app
     ? region.app.url
       ? `<a class="region-app" href="${region.app.url}" aria-label="Open ${escapeHTML(region.app.name)}">${appContents}<b aria-hidden="true">↗</b></a>`
       : `<div class="region-app">${appContents}</div>`
     : `<div class="future-note"><span class="mono">FUTURE</span><p>No system yet. Just a place in the structure when it is useful.</p></div>`;
-  article.innerHTML = `<div class="region-card-top"><span class="mono">${region.number} / REGION</span><span class="status status-${region.visibility} mono">${statusLabel(region.visibility)}</span></div><h3>${escapeHTML(region.name)}</h3><p class="region-description">${escapeHTML(region.description)}</p>${app}`;
+  article.innerHTML = `<div class="region-card-top"><h3>${escapeHTML(region.name)}</h3></div>${app}<span class="status status-${region.visibility} mono">${statusLabel(region.visibility)}</span>`;
   regionList.append(article);
 });
 
