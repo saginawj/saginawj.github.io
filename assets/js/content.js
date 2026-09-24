@@ -1,9 +1,9 @@
 window.siteContent = (() => {
 const regions = [
-  { id: 'places', name: 'Places', number: '01', description: 'Where I’ve been and where I’m going.', visibility: 'private', app: { name: 'Twiga Dunia', description: 'My travel map, trips, photographs, and stories.', icon: 'assets/img/favicon.png', iconAlt: 'Twiga Dunia globe icon', fallback: 'TD', url: 'https://travel.goodluckfinding.me' } },
-  { id: 'money', name: 'Money', number: '02', description: 'How I spend, save, invest, and pay attention.', visibility: 'private', position: 'east', app: { name: 'Twiga Akiba', description: 'A private system for understanding my financial life.', icon: '', iconAlt: '', fallback: 'TA', url: 'https://finance.goodluckfinding.me' } },
-  { id: 'memory', name: 'Memory', number: '03', description: 'What I want to remember, and who was there.', visibility: 'private', app: { name: 'Yalda', description: 'My journal, life record, and relationship memory.', icon: '', iconAlt: '', fallback: 'YA', url: 'https://journal.goodluckfinding.me' } },
-  { id: 'body', name: 'Body', number: '04', description: 'Health, movement, sleep, and the physical record.', visibility: 'future', app: null }
+  { id: 'places', name: 'Travel', number: '01', description: 'Where I’ve been and where I’m going.', visibility: 'private', app: { name: 'Twiga Dunia', description: 'My travel map, trips, photographs, and stories.', icon: 'assets/img/twiga-dunia-logo.png', iconAlt: 'Twiga Dunia giraffe and globe logo', fallback: 'TD', url: 'https://travel.goodluckfinding.me' } },
+  { id: 'money', name: 'Money', number: '02', description: 'How I spend, save, invest, and pay attention.', visibility: 'private', position: 'east', app: { name: 'Twiga Akiba', description: 'A private system for understanding my financial life.', icon: 'assets/img/twiga-akiba-mark.png', iconAlt: 'Twiga Akiba giraffe and growth chart logo', fallback: 'TA', url: 'https://finance.goodluckfinding.me' } },
+  { id: 'memory', name: 'Journal', number: '03', description: 'What I want to remember, and who was there.', visibility: 'private', app: { name: 'Yalda', description: 'My journal, life record, and relationship memory.', icon: 'assets/img/yalda-logo.png', iconAlt: 'Yalda pomegranate profile logo', fallback: 'YA', url: 'https://journal.goodluckfinding.me' } },
+  { id: 'body', name: 'Fitness', number: '04', description: 'Health, movement, sleep, and the physical record.', visibility: 'private', app: { name: 'Milo', description: 'My health, movement, sleep, and physical record.', icon: 'assets/img/milo-logo.png', iconAlt: 'Milo strength and lion logo', fallback: 'MI', url: 'https://body.goodluckfinding.me/' } }
 ];
 const projects = [
   { id: 'meanwhile', name: 'Meanwhile', mark: 'MW', description: 'A place for work that belongs in the space between everything else.', status: 'building', year: '2026', url: '', githubUrl: '' },
@@ -24,7 +24,7 @@ ar bo br cl co ec gy py pe sr uy ve
 au fj ki mh fm nr nz pw pg ws sb to tv vu
 `;
 const officialCountryCodes = countryCodeString.trim().split(/\s+/);
-const provisionalUnvisitedCodes = ['ir','kp','ps','ve','jm','do','ht','dm','gd','kn','vc','lc'];
+const provisionalUnvisitedCodes = ['ir','kp','ps','ve','dm','gd','kn','vc','lc'];
 const countryNotes = { gl: { visited: true, year: '2018', note: 'Ice, rock, and a very good reason to stop walking.' }, us: { visited: true, note: 'Home base: New York.' } };
 const travelData = officialCountryCodes.map((code) => ({ code, visited: !provisionalUnvisitedCodes.includes(code), provisional: true, ...(countryNotes[code] || {}) }));
 return { regions, projects, officialCountryCodes, countryNotes, travelData };

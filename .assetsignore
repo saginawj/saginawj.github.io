@@ -1,0 +1,4 @@
+.git/
+.vscode/
+.assetsignore
+wrangler.jsonc

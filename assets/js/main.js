@@ -1,15 +1,20 @@
 const { regions, projects, officialCountryCodes, countryNotes, travelData } = window.siteContent;
 
 const escapeHTML = (value = '') => String(value).replace(/[&<>'\"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
-const statusLabel = (status) => status === 'private' ? 'PRIVATE <span aria-hidden="true">🔒</span>' : status.toUpperCase();
+const statusLabel = (status) => status === 'private' ? 'PRIVATE <span class="lock-icon" aria-hidden="true"></span>' : status.toUpperCase();
 const iconMarkup = (app) => app.icon ? `<img src="${app.icon}" alt="${escapeHTML(app.iconAlt)}">` : `<span aria-hidden="true">${escapeHTML(app.fallback)}</span>`;
 
 const regionList = document.querySelector('#region-list');
 regions.forEach((region) => {
   const article = document.createElement('article');
   article.className = `region-card region-${region.id} reveal`;
-  const app = region.app ? `<a class="region-app" href="${region.app.url}" aria-label="Open ${escapeHTML(region.app.name)}"><span class="app-icon">${iconMarkup(region.app)}</span><span class="app-copy"><small class="mono">PRIVATE TOOL</small><strong>${escapeHTML(region.app.name)}</strong><span>${escapeHTML(region.app.description)}</span></span><b aria-hidden="true">↗</b></a>` : `<div class="future-note"><span class="mono">FUTURE</span><p>No system yet. Just a place in the structure when it is useful.</p></div>`;
-  article.innerHTML = `<div class="region-card-top"><span class="mono">${region.number} / REGION</span><span class="status status-${region.visibility} mono">${statusLabel(region.visibility)}</span></div><h3>${escapeHTML(region.name)}</h3><p class="region-description">${escapeHTML(region.description)}</p>${app}`;
+  const appContents = region.app ? `<span class="app-icon">${iconMarkup(region.app)}</span><span class="app-copy"><strong>${escapeHTML(region.app.name)}</strong><span>${escapeHTML(region.app.description)}</span></span>` : '';
+  const app = region.app
+    ? region.app.url
+      ? `<a class="region-app" href="${region.app.url}" aria-label="Open ${escapeHTML(region.app.name)}">${appContents}<b aria-hidden="true">↗</b></a>`
+      : `<div class="region-app">${appContents}</div>`
+    : `<div class="future-note"><span class="mono">FUTURE</span><p>No system yet. Just a place in the structure when it is useful.</p></div>`;
+  article.innerHTML = `<div class="region-card-top"><h3>${escapeHTML(region.name)}</h3></div>${app}<span class="status status-${region.visibility} mono">${statusLabel(region.visibility)}</span>`;
   regionList.append(article);
 });
 
@@ -24,6 +29,7 @@ projects.forEach((project, index) => {
 
 const navToggle = document.querySelector('.nav-toggle');
 const navLinks = [...document.querySelectorAll('.site-nav a')];
+document.querySelector('.contact-links a[aria-label="Instagram"]')?.setAttribute('href', 'https://www.instagram.com/p111gp333n/');
 navToggle?.addEventListener('click', () => { const open = document.body.classList.toggle('nav-open'); navToggle.setAttribute('aria-expanded', String(open)); });
 navLinks.forEach((link) => link.addEventListener('click', () => { document.body.classList.remove('nav-open'); navToggle?.setAttribute('aria-expanded', 'false'); }));
 const sectionObserver = new IntersectionObserver((entries) => { const visible = entries.filter((entry) => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0]; if (!visible) return; navLinks.forEach((link) => link.classList.toggle('active', link.dataset.section === visible.target.id)); }, { rootMargin: '-25% 0px -60%', threshold: [0, .3] });
@@ -32,13 +38,15 @@ document.querySelectorAll('main > section[id]:not(#top)').forEach((section) => s
 const countryDisplayNames = new Intl.DisplayNames(['en'], { type: 'region' });
 const countryByCode = new Map(travelData.map((country) => [country.code, country]));
 // The published total is authoritative while individual map statuses remain provisional.
-const visitedCount = 175;
+const visitedCount = travelData.filter((country) => country.visited).length;
+const remainingCount = travelData.length - visitedCount;
 document.querySelectorAll('[data-country-count]').forEach((element) => { element.textContent = visitedCount; });
+document.querySelectorAll('[data-country-remaining]').forEach((element) => { element.textContent = remainingCount; });
 const mapContainer = document.querySelector('#world-map');
 const mapStatus = document.querySelector('#map-status');
 const countryCard = document.querySelector('#country-card');
 const countryName = (path, code) => path?.dataset.countryName || path?.getAttribute('aria-label') || countryDisplayNames.of(code.toUpperCase()) || code.toUpperCase();
-const showCountry = (path, code) => { const record = countryByCode.get(code) || countryNotes[code]; const name = countryName(path, code); const status = record?.visited ? 'Visited' : record ? 'Not yet' : 'Map context'; mapStatus.textContent = `${name.toUpperCase()} / ${status.toUpperCase()}`; countryCard.hidden = false; countryCard.innerHTML = `<span class="mono">${escapeHTML(code.toUpperCase())} / ${escapeHTML(status)}</span><strong>${escapeHTML(name)}</strong><p>${escapeHTML(record?.note || (record?.provisional ? 'Travel status follows the provisional 175-country record.' : 'Included for geographic context.'))}</p>${record?.year ? `<small class="mono">FIELD NOTE / ${escapeHTML(record.year)}</small>` : ''}`; };
+const showCountry = (path, code) => { const record = countryByCode.get(code) || countryNotes[code]; const name = countryName(path, code); const status = record?.visited ? 'Visited' : record ? 'Not yet' : 'Map context'; mapStatus.textContent = `${name.toUpperCase()} / ${status.toUpperCase()}`; countryCard.hidden = false; countryCard.innerHTML = `<span class="mono">${escapeHTML(code.toUpperCase())} / ${escapeHTML(status)}</span><strong>${escapeHTML(name)}</strong><p>${escapeHTML(record?.note || (record?.provisional ? `Travel status follows the provisional ${visitedCount}-country record.` : 'Included for geographic context.'))}</p>${record?.year ? `<small class="mono">FIELD NOTE / ${escapeHTML(record.year)}</small>` : ''}`; };
 const initializeMap = async () => {
   const showStaticMap = () => {
     mapContainer.classList.add('map-failed');
