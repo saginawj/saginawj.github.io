@@ -1,4 +1,4 @@
-const CACHE_NAME = 'glfm-v10';
+const CACHE_NAME = 'glfm-v11';
 const APP_SHELL = [
   './',
   './index.html',
@@ -12,8 +12,8 @@ const APP_SHELL = [
   './assets/img/icon-192.png',
   './assets/img/icon-512.png',
   './assets/img/apple-touch-icon.png',
-  './assets/img/twiga-dunia-logo.png',
-  './assets/img/twiga-akiba-mark.png',
+  './assets/img/dunia-logo.png',
+  './assets/img/akiba-logo.png',
   './assets/img/yalda-logo.png',
   './assets/img/milo-logo.png',
   './assets/img/greenland-hero-2.jpg',
