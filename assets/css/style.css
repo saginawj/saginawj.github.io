@@ -41,6 +41,10 @@
 
 .map-chapter .life-intro{display:block;max-width:48rem;margin-bottom:2.75rem}
 .map-chapter .life-intro h2{max-width:none}
+.map-chapter .life-intro p:not(.section-kicker){max-width:42rem;margin:1.1rem 0 0;color:var(--muted);font-size:1.08rem}
+
+.architecture-chapter{padding:clamp(5rem,10vw,10rem) clamp(1.25rem,7vw,8rem);background:#eef0e9}
+.architecture-heading{margin-bottom:3rem}.architecture-heading .section-kicker{margin-bottom:1.25rem}.architecture-heading h2{max-width:13ch;margin:0;font:clamp(3rem,6vw,6rem)/.95 var(--display);letter-spacing:-.05em}.architecture-figure{margin:0;overflow:hidden;background:#f8f5ee;border:1px solid var(--line);box-shadow:0 1.5rem 3.5rem rgba(17,19,16,.1)}.architecture-figure img{width:100%;height:auto}
 
 .contact-links a{align-items:center;padding:1.4rem 0}
 .contact-links svg{width:2.75rem;height:2.75rem;fill:currentColor;transition:transform .22s ease}
@@ -57,3 +61,4 @@
 @media(max-width:620px){.contact-chapter{padding-top:4rem;padding-bottom:4rem}.contact-links a{min-height:5.5rem}.contact-links svg{width:2.5rem;height:2.5rem}}
 .contact-chapter .github-pulse{color:#f0f6fc;background:#0d1117;border:1px solid rgba(240,246,252,.14)}
 .contact-chapter .github-chart-link img{filter:brightness(1.18) saturate(1.15) contrast(1.08)}
+@media(max-width:620px){.architecture-chapter{padding:5.5rem 1.25rem}.architecture-heading{margin-bottom:2rem}.architecture-figure{margin-right:-1.25rem;margin-left:-1.25rem;border-right:0;border-left:0}}
